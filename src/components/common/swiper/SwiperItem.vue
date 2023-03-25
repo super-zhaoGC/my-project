@@ -17,5 +17,6 @@ export default {
 }
 .slide img {
   width: 100%;
+  overflow: hidden;
 }
 </style>

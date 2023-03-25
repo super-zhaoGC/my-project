@@ -43,7 +43,7 @@ export default {
       default: true,
     },
   },
-  data: function () {
+  data() {
     return {
       slideCount: 0, // 元素个数
       totalWidth: 0, // swiper的宽度
@@ -52,7 +52,7 @@ export default {
       scrolling: false, // 是否正在滚动
     };
   },
-  mounted: function () {
+  mounted() {
     // 1.操作DOM, 在前后添加Slide
     setTimeout(() => {
       this.handleDom();
@@ -64,19 +64,19 @@ export default {
     /**
      * 定时器操作
      */
-    startTimer: function () {
+    startTimer() {
       this.playTimer = window.setInterval(() => {
         this.currentIndex++;
         this.scrollContent(-this.currentIndex * this.totalWidth);
       }, this.interval);
     },
-    stopTimer: function () {
+    stopTimer() {
       window.clearInterval(this.playTimer);
     },
     /**
      * 滚动到正确的位置
      */
-    scrollContent: function (currentPosition) {
+    scrollContent(currentPosition) {
       // 0.设置正在滚动
       this.scrolling = true;
       // 1.开始滚动动画
@@ -90,7 +90,7 @@ export default {
     /**
      * 校验正确的位置
      */
-    checkPosition: function () {
+    checkPosition() {
       window.setTimeout(() => {
         // 1.校验正确的位置
         this.swiperStyle.transition = "0ms";
@@ -108,7 +108,7 @@ export default {
     /**
      * 设置滚动的位置
      */
-    setTransform: function (position) {
+    setTransform(position) {
       this.swiperStyle.transform = `translate3d(${position}px, 0, 0)`;
       this.swiperStyle[
         "-webkit-transform"
@@ -118,14 +118,14 @@ export default {
     /**
      * 操作DOM, 在DOM前后添加Slide
      */
-    handleDom: function () {
+    handleDom() {
       // 1.获取要操作的元素
       let swiperEl = document.querySelector(".swiper");
       let slidesEls = swiperEl.getElementsByClassName("slide");
       // 2.保存个数
       this.slideCount = slidesEls.length;
       // 3.如果大于1个, 那么在前后分别添加一个slide
-      if (this.slideCount > 1) {
+      if (slidesEls.length > 1) {
         let cloneFirst = slidesEls[0].cloneNode(true);
         let cloneLast = slidesEls[this.slideCount - 1].cloneNode(true);
         swiperEl.insertBefore(cloneLast, slidesEls[0]);
@@ -139,7 +139,7 @@ export default {
     /**
      * 拖动事件的处理
      */
-    touchStart: function (e) {
+    touchStart(e) {
       // 1.如果正在滚动, 不可以拖动
       if (this.scrolling) return;
       // 2.停止定时器
@@ -147,7 +147,7 @@ export default {
       // 3.保存开始滚动的位置
       this.startX = e.touches[0].pageX;
     },
-    touchMove: function (e) {
+    touchMove(e) {
       // 1.计算出用户拖动的距离
       this.currentX = e.touches[0].pageX;
       this.distance = this.currentX - this.startX;
@@ -156,7 +156,7 @@ export default {
       // 2.设置当前的位置
       this.setTransform(moveDistance);
     },
-    touchEnd: function (e) {
+    touchEnd(e) {
       // 1.获取移动的距离
       let currentMove = Math.abs(this.distance);
       // 2.判断最终的距离
