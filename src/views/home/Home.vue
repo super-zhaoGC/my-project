@@ -5,9 +5,11 @@
     <recommends-view :recommend="recommends"></recommends-view>
     <feature-view></feature-view>
     <tab-control
+      @tabClick="homeTabClick"
       :title="['流行', '新款', '精选']"
       class="tab-control"
     ></tab-control>
+    <goods-list :goodsList="goods[currentType].list"></goods-list>
     <ul>
       <li>列表1</li>
       <li>列表2</li>
@@ -66,29 +68,76 @@
 <script>
 import NavBar from "components/common/navBar/NavBar.vue";
 import TabControl from "components/context/tabControl/TabControl.vue";
+import GoodsList from "components/context/goods/GoodsList.vue";
 
 import HomeSwiper from "./childComp/HomeSwiper.vue";
 import RecommendsView from "./childComp/RecommendsView.vue";
 import FeatureView from "./childComp/FeatureView.vue";
 
-import { getHomeMultiData } from "network/home";
+import { getHomeMultiData, getHomeData } from "network/home";
 
 export default {
-  components: { NavBar, HomeSwiper, RecommendsView, FeatureView, TabControl },
+  components: {
+    NavBar,
+    HomeSwiper,
+    RecommendsView,
+    FeatureView,
+    TabControl,
+    GoodsList,
+  },
   name: "Home",
   data() {
     return {
       banners: [],
       recommends: [],
+      goods: {
+        pop: { list: [{ age: 1, name: "lilei" }], page: 0 },
+        new: { list: [{ age: 2, name: "Bob" }], page: 0 },
+        sell: { list: [{ age: 3, name: "pite" }], page: 0 },
+      },
+      currentType: "pop",
     };
   },
   created() {
     //获取home页面的数据
-    getHomeMultiData().then((res) => {
-      // console.log(res);
-      this.banners = res.data.banner.list;
-      this.recommends = res.data.recommend.list;
-    });
+    this.getMultidataArray();
+    this.getHomeDataArray("new");
+    this.getHomeDataArray("pop");
+    this.getHomeDataArray("sell");
+  },
+  methods: {
+    homeTabClick(index) {
+      console.log(index);
+      switch (index) {
+        case 0:
+          this.currentType = "pop";
+          break;
+        case 1:
+          this.currentType = "new";
+          break;
+        case 2:
+          this.currentType = "sell";
+          break;
+      }
+    },
+
+    getMultidataArray() {
+      getHomeMultiData().then((res) => {
+        // console.log(res);
+        this.banners = res.data.banner.list;
+        this.recommends = res.data.recommend.list;
+      });
+    },
+
+    getHomeDataArray(type) {
+      const page = this.goods[type].page + 1;
+      getHomeData(type, page).then((res) => {
+        console.log(res);
+        console.log(this.goods[type].list);
+        // this.goods[type].list.push(...res.data.list);
+        this.goods[type].page += 1;
+      });
+    },
   },
 };
 </script>
