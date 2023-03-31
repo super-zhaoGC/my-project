@@ -3,7 +3,13 @@
     <el-carousel height="195px">
       <el-carousel-item v-for="(item, index) in banner" :key="index">
         <!-- <h3 class="small">{{ item }}</h3> -->
-        <img :src="item.image" alt="" class="small" style="width: 100%" />
+        <img
+          :src="item.image"
+          alt=""
+          class="small"
+          style="width: 100%"
+          @load="imageLoad"
+        />
       </el-carousel-item>
     </el-carousel>
   </div>
@@ -17,6 +23,11 @@ export default {
       default() {
         return [];
       },
+    },
+  },
+  methods: {
+    imageLoad() {
+      this.$bus.$emit("imageLoad");
     },
   },
 };

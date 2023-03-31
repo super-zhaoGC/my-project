@@ -1,7 +1,7 @@
 <template>
   <div id="home">
     <nav-bar class="home-nav"><div slot="center">购物街</div></nav-bar>
-    <scroll class="content">
+    <scroll class="content" ref="scroll">
       <!-- <home-swiper :banner="banners"></home-swiper> -->
       <element-swiper :banner="banners"></element-swiper>
       <recommends-view :recommend="recommends"></recommends-view>
@@ -65,6 +65,7 @@
         <li>列表50</li>
       </ul>
     </scroll>
+    <back-top @click.native="backTop"></back-top>
   </div>
 </template>
 
@@ -73,6 +74,7 @@ import NavBar from "components/common/navBar/NavBar.vue";
 import TabControl from "components/context/tabControl/TabControl.vue";
 import GoodsList from "components/context/goods/GoodsList.vue";
 import Scroll from "components/common/scroll/Scroll.vue";
+import BackTop from "components/context/backTop/BackTop.vue";
 
 // import HomeSwiper from "./childComp/HomeSwiper.vue";
 import ElementSwiper from "components/common/swiper/ElementSwiper.vue";
@@ -91,6 +93,7 @@ export default {
     TabControl,
     GoodsList,
     Scroll,
+    BackTop,
   },
   name: "Home",
 
@@ -112,6 +115,12 @@ export default {
     this.getHomeDataArray("new");
     this.getHomeDataArray("pop");
     this.getHomeDataArray("sell");
+  },
+  mounted() {
+    this.$bus.$on("imageLoad", () => {
+      this.$refs.scroll.refresh();
+      // console.log(this.$refs.scroll.scroll);
+    });
   },
   methods: {
     homeTabClick(index) {
@@ -145,6 +154,12 @@ export default {
         // this.goods[type].list.push(...res.data.list);
         this.goods[type].page += 1;
       });
+    },
+
+    backTop() {
+      // console.log("dada");
+      this.$refs.scroll.scrollTo(0, 0, 500);
+      console.log(this.$refs.scroll.msg);
     },
   },
 };
