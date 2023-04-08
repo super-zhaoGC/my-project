@@ -14,6 +14,12 @@ export default {
   components: {
     BScroll,
   },
+  props: {
+    probeType: {
+      type: Number,
+      default: 3,
+    },
+  },
   data() {
     return {
       scroll: null,
@@ -43,8 +49,15 @@ export default {
     },
   },
   mounted() {
-    this.scroll = new BScroll(this.$refs.wrapper, {});
+    this.scroll = new BScroll(this.$refs.wrapper, {
+      click: true,
+      probeType: this.probeType,
+    });
     console.log(this.scroll);
+    this.scroll.on("scroll", (position) => {
+      this.$emit("scroll", position);
+      // console.log(position);
+    });
   },
   updated() {
     refresh();

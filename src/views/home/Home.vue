@@ -1,7 +1,12 @@
 <template>
   <div id="home">
     <nav-bar class="home-nav"><div slot="center">购物街</div></nav-bar>
-    <scroll class="content" ref="scroll">
+    <scroll
+      class="content"
+      ref="scroll"
+      @scroll="scrollContent"
+      :probe-type="3"
+    >
       <!-- <home-swiper :banner="banners"></home-swiper> -->
       <element-swiper :banner="banners"></element-swiper>
       <recommends-view :recommend="recommends"></recommends-view>
@@ -65,7 +70,7 @@
         <li>列表50</li>
       </ul>
     </scroll>
-    <back-top @click.native="backTop"></back-top>
+    <back-top @click.native="backTop" v-if="isShow"></back-top>
   </div>
 </template>
 
@@ -107,6 +112,7 @@ export default {
         sell: { list: [{ age: 3, name: "pite" }], page: 0 },
       },
       currentType: "pop",
+      isShow: false,
     };
   },
   created() {
@@ -160,6 +166,11 @@ export default {
       // console.log("dada");
       this.$refs.scroll.scrollTo(0, 0, 500);
       console.log(this.$refs.scroll.msg);
+    },
+
+    scrollContent(position) {
+      console.log(position);
+      this.isShow = -position.y > 500;
     },
   },
 };
